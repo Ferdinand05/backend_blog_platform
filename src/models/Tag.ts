@@ -14,6 +14,7 @@ const Tag = sequelize.define("Tag", {
       min: 2,
       notEmpty: true,
     },
+    unique: true,
   },
   slug: {
     type: DataTypes.STRING,

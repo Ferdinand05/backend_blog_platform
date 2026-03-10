@@ -11,7 +11,7 @@ const Category = sequelize.define("Category", {
     type: DataTypes.STRING(50),
     allowNull: false,
     validate: {
-      min: 3,
+      len: [3, 50],
       notEmpty: true,
     },
   },
@@ -19,6 +19,7 @@ const Category = sequelize.define("Category", {
     type: DataTypes.STRING(100),
     allowNull: false,
     validate: {
+      len: [1, 100],
       notEmpty: true,
     },
   },

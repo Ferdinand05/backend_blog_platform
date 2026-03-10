@@ -56,3 +56,18 @@ const Post = sequelize.define("Post", {
 });
 
 export default Post;
+
+// Category.addHook("beforeValidate", async (category: any) => {
+//   if (!category.changed("name")) return;
+
+//   const baseSlug = createSlug(category.name);
+//   let slug = baseSlug;
+//   let counter = 1;
+
+//   while (await Category.findOne({ where: { slug } })) {
+//     slug = `${baseSlug}-${counter}`;
+//     counter++;
+//   }
+
+//   category.slug = slug;
+// });

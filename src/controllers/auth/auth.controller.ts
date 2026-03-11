@@ -23,7 +23,6 @@ export async function register(req: Request, res: Response) {
     return res.status(400).json({
       message: "Email already exist",
     });
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   const role = (await db.Role.findOne({
     where: { role_name: "author" },
@@ -38,7 +37,7 @@ export async function register(req: Request, res: Response) {
   const user = await db.User.create({
     email,
     username,
-    password: hashedPassword,
+    password,
     role_id: role.id,
   });
   return res.status(200).json({

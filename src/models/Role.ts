@@ -1,5 +1,6 @@
 import { DataTypes, REAL } from "sequelize";
 import sequelize from "../config/database";
+import { createSlug } from "../utils/slug";
 
 const Role = sequelize.define("Role", {
   id: {
@@ -10,6 +11,7 @@ const Role = sequelize.define("Role", {
   slug: {
     type: DataTypes.STRING(100),
     allowNull: false,
+    unique: true,
     validate: {
       notEmpty: true,
     },
@@ -20,6 +22,10 @@ const Role = sequelize.define("Role", {
     validate: {
       min: 3,
       notEmpty: true,
+    },
+    set(value: string) {
+      this.setDataValue("role_name", value);
+      this.setDataValue("slug", createSlug(value));
     },
   },
 });

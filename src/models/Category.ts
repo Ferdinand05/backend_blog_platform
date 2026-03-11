@@ -15,6 +15,10 @@ const Category = sequelize.define("Category", {
       len: [3, 50],
       notEmpty: true,
     },
+    set(value: string) {
+      this.setDataValue("name", value);
+      this.setDataValue("slug", createSlug(value));
+    },
   },
   slug: {
     type: DataTypes.STRING(100),
@@ -25,12 +29,6 @@ const Category = sequelize.define("Category", {
       notEmpty: true,
     },
   },
-});
-
-Category.addHook("beforeValidate", (category: any) => {
-  if (category.changed("name")) {
-    category.slug = createSlug(category.name);
-  }
 });
 
 export default Category;

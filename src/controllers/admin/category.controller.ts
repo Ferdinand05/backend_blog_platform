@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import db from "../../models";
 import { categorySchema } from "../../validators/category.validator";
 import z from "zod";
-import { ICategory } from "../../types/category";
-import { InferCreationAttributes } from "sequelize";
 
 export async function getAllCategory(req: Request, res: Response) {
   const categories = await db.Category.findAll();
@@ -73,5 +71,5 @@ export async function deleteCategory(req: Request, res: Response) {
     return res.status(404).json({ message: "Category not found" });
   }
 
-  return res.status(200).json({ message: "Category deleted", category });
+  return res.status(200).json({ message: "Category deleted" });
 }

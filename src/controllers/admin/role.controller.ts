@@ -3,7 +3,13 @@ import db from "../../models";
 import { roleSchema } from "../../validators/role.validator";
 import z from "zod";
 export async function getAllRole(req: Request, res: Response) {
-  const roles = await db.Role.findAll();
+  const roles = await db.Role.findAll({
+    include: {
+      model: db.User,
+      as: "users",
+      attributes: ["id", "username", "email"],
+    },
+  });
 
   return res.status(200).json({ roles });
 }

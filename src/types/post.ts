@@ -1,3 +1,6 @@
+import z from "zod";
+import { createPostSchema } from "../validators/post.validator";
+
 export namespace IPost {
   export interface Post {
     id: number;
@@ -11,6 +14,7 @@ export namespace IPost {
     views: number;
     createdAt?: string | Date;
     updatedAt?: string | Date;
+    cover_image_public_id?: string;
   }
 
   export interface CreatePost {
@@ -35,3 +39,5 @@ export namespace IPost {
     views?: number;
   }
 }
+
+export type CreatePostInput = z.infer<typeof createPostSchema>;

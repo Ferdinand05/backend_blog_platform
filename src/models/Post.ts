@@ -53,21 +53,10 @@ const Post = sequelize.define("Post", {
     type: DataTypes.BIGINT,
     allowNull: false,
   },
+  cover_image_public_id: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+  },
 });
 
 export default Post;
-
-// Category.addHook("beforeValidate", async (category: any) => {
-//   if (!category.changed("name")) return;
-
-//   const baseSlug = createSlug(category.name);
-//   let slug = baseSlug;
-//   let counter = 1;
-
-//   while (await Category.findOne({ where: { slug } })) {
-//     slug = `${baseSlug}-${counter}`;
-//     counter++;
-//   }
-
-//   category.slug = slug;
-// });

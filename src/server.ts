@@ -1,10 +1,8 @@
-import express from "express";
 import * as dotenv from "dotenv";
 dotenv.config();
 import sequelize from "./config/database";
 import db from "./models";
-
-const app = express();
+import app from "./app";
 
 async function connect() {
   try {
@@ -18,9 +16,10 @@ async function connect() {
     // await sequelize.sync({ force: true });
 
     // console.log("All models were synchronized successfully.");
+
     // console.log("📊 Tables created:", Object.keys(db.sequelize.models));
 
-    console.log("Database : " + db.sequelize.getDatabaseName());
+    // console.log("Database : " + db.sequelize.getDatabaseName());
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }

@@ -9,4 +9,6 @@ export const errorLoggerMiddleware = expressWinston.errorLogger({
     }),
   ],
   format: winston.format.combine(winston.format.simple(), winston.format.json()),
+  meta: true,
+  msg: "HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms",
 });

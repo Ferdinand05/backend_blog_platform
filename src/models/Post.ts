@@ -53,6 +53,10 @@ const Post = sequelize.define("Post", {
     type: DataTypes.BIGINT,
     allowNull: false,
   },
+  cover_image_public_id: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+  },
 });
 
 export default Post;

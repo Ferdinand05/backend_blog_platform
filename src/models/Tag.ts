@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database";
+import { createSlug } from "../utils/slug";
 
 const Tag = sequelize.define("Tag", {
   id: {
@@ -14,10 +15,15 @@ const Tag = sequelize.define("Tag", {
       min: 2,
       notEmpty: true,
     },
+    set(val: string) {
+      this.setDataValue("name", val);
+      this.setDataValue("slug", createSlug(val));
+    },
   },
   slug: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
 });
 

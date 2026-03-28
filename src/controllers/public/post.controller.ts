@@ -3,13 +3,36 @@ import db from "../../models";
 import Category from "../../models/Category";
 
 export async function getAllPost(req: Request, res: Response) {
+  const limit = Number(req.query.limit) || 6;
+  const offset = Number(req.query.offset) || 0;
+
   const posts = await db.Post.findAll({
-    include: {
-      model: Category,
-      as: "category",
-    },
+    limit,
+    offset,
+    order: [["createdAt", "ASC"]],
+    include: [
+      {
+        model: Category,
+        as: "category",
+        attributes: {
+          exclude: ["updatedAt", "createdAt"],
+        },
+      },
+      {
+        model: db.User,
+        as: "author",
+        attributes: {
+          exclude: ["updatedAt", "createdAt", "resetPasswordToken", "lastLogin"],
+        },
+      },
+      {
+        model: db.Tag,
+        as: "tags",
+        attributes: ["id", "name", "slug"],
+      },
+    ],
     attributes: {
-      exclude: ["updated_at"],
+      exclude: ["updatedAt"],
     },
   });
 

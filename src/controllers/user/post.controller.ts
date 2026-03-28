@@ -7,35 +7,58 @@ import { createPostSchema } from "../../validators/post.validator";
 import z from "zod";
 
 export async function getUserPosts(req: AuthRequest, res: Response) {
-  const posts = await db.Post.findAll({
-    where: { author_id: req.user?.id! },
-    attributes: {
-      exclude: ["cover_image_public_id"],
-    },
-    include: [
-      {
-        model: db.Category,
-        as: "category",
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-      },
-      {
-        model: db.User,
-        as: "author",
-        attributes: {
-          exclude: ["password", "updatedAt", "resetPasswordToken", "lastLogin"],
-        },
-      },
-      {
-        model: db.Tag,
-        as: "tags",
-        attributes: ["id", "name", "slug"],
-      },
-    ],
-  });
+  try {
+    // ambil query params
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
 
-  return res.json({ posts });
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await db.Post.findAndCountAll({
+      where: { author_id: req.user?.id! },
+      include: [
+        {
+          model: db.Category,
+          as: "category",
+          attributes: {
+            exclude: ["updatedAt", "createdAt"],
+          },
+        },
+        {
+          model: db.User,
+          as: "author",
+          attributes: {
+            exclude: ["updatedAt", "createdAt"],
+          },
+        },
+        {
+          model: db.Tag,
+          as: "tags",
+          attributes: {
+            exclude: ["updatedAt", "createdAt"],
+          },
+        },
+      ],
+      attributes: {
+        exclude: ["updatedAt"],
+      },
+      limit,
+      offset,
+      distinct: true,
+    });
+
+    return res.status(200).json({
+      posts: rows,
+      meta: {
+        totalData: count,
+        totalPage: Math.ceil(count / limit),
+        currentPage: page,
+        perPage: limit,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error", error });
+  }
 }
 
 export async function createUserPost(req: AuthRequest, res: Response) {

@@ -41,7 +41,7 @@ export async function register(req: Request, res: Response) {
     role_id: role.id,
   });
   return res.status(200).json({
-    messsage: "User registered successfully.",
+    message: "User registered successfully.",
     user: {
       username: user.username,
       email: user.email,
@@ -104,11 +104,7 @@ export async function login(req: Request, res: Response) {
     return res.status(200).json({
       message: "Login successfully.",
       token: token,
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role?.role_name,
-      },
+      user: payload,
     });
   } catch (err) {
     console.error(err);

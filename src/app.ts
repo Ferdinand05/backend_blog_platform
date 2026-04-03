@@ -6,8 +6,9 @@ const app = express();
 import routes from "./routes/index";
 import { loggerMiddleware } from "./middleware/logger.middleware";
 import { errorLogger } from "express-winston";
-
+import cookieParser from "cookie-parser";
 //Initalizing
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors());

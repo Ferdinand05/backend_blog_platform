@@ -4,7 +4,7 @@ import db from "../../models";
 import { createSlug } from "../../utils/slug";
 import { deleteImage, uploadImage } from "../../services/upload.services";
 import { createPostSchema } from "../../validators/post.validator";
-import z from "zod";
+import z, { number } from "zod";
 
 export async function getUserPosts(req: AuthRequest, res: Response) {
   try {
@@ -212,6 +212,20 @@ export async function deleteUserPost(req: AuthRequest, res: Response) {
     return res.status(500).json({
       message: "Failed delete post",
       error,
+    });
+  }
+}
+
+export async function updateStatusPost(req: AuthRequest, res: Response) {
+  const { id } = req.params;
+  const { status } = req.body;
+  const post = db.Post.findByPk(Number(id));
+
+  (post as any).update({ status });
+
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
     });
   }
 }

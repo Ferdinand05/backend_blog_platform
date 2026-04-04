@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import db from "../../models";
 import Category from "../../models/Category";
-
+import crypto from "crypto";
 export async function getAllPost(req: Request, res: Response) {
   const limit = Number(req.query.limit) || 8;
   const offset = Number(req.query.offset) || 0;
@@ -77,18 +77,21 @@ export async function getPost(req: Request, res: Response) {
     });
   }
 
-  const cookieKey = `viewed_post_${(post as any).id}`;
+  const rawIp = (req.headers["x-forwarded-for"] as string)?.split(",")[0] || req.socket.remoteAddress || "unknown";
+
+  const hashedIp = crypto.createHash("md5").update(rawIp).digest("hex");
+
+  const cookieKey = `viewed_post_${(post as any).id}_${hashedIp}`;
 
   const alreadyViewed = req.cookies[cookieKey];
 
   if (!alreadyViewed) {
-    // increment views
     await post.increment("views");
 
-    // set cookie 1 jam
-    res.cookie(cookieKey, true, {
-      maxAge: 1000 * 60 * 60, // 1 jam
+    res.cookie(cookieKey, "1", {
+      maxAge: 1000 * 60 * 60,
       httpOnly: true,
+      sameSite: "lax",
     });
   }
 

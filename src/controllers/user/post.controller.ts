@@ -5,6 +5,7 @@ import { createSlug } from "../../utils/slug";
 import { deleteImage, uploadImage } from "../../services/upload.services";
 import { createPostSchema } from "../../validators/post.validator";
 import z, { number } from "zod";
+import { where } from "sequelize";
 
 export async function getUserPosts(req: AuthRequest, res: Response) {
   try {
@@ -219,13 +220,19 @@ export async function deleteUserPost(req: AuthRequest, res: Response) {
 export async function updateStatusPost(req: AuthRequest, res: Response) {
   const { id } = req.params;
   const { status } = req.body;
-  const post = db.Post.findByPk(Number(id));
-
-  (post as any).update({ status });
-
+  const post = await db.Post.update(
+    { status: status },
+    {
+      where: { id: id },
+    },
+  );
   if (!post) {
     return res.status(404).json({
       message: "Post not found",
     });
   }
+
+  return res.status(200).json({
+    message: "Post Status Updated!",
+  });
 }

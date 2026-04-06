@@ -138,3 +138,33 @@ export async function changePassword(req: AuthRequest, res: Response) {
     });
   }
 }
+
+export async function getDashboardStats(req: AuthRequest, res: Response) {
+  const userId = req.user?.id;
+
+  const totalPosts = await db.Post.count({
+    where: {
+      author_id: userId,
+      status: "published",
+    },
+  });
+
+  const totalDrafts = await db.Post.count({
+    where: {
+      author_id: userId,
+      status: "draft",
+    },
+  });
+
+  const totalViews = await db.Post.sum("views", {
+    where: {
+      author_id: userId,
+    },
+  });
+
+  return res.json({
+    totalPosts,
+    totalDrafts,
+    totalViews: totalViews || 0,
+  });
+}
